@@ -1,0 +1,9 @@
+[project]
+name = "svc-orders"
+version = "1.0.0"
+description = "Place orders and price them. A consumer of the shared build-test workflow."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
