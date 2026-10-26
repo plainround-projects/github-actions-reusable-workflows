@@ -1,0 +1,9 @@
+name: ci
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  ci:
+    uses: sumitsr/platform-ci/.github/workflows/build-test.yml@661d5382064eb35ee845d5438810ec6a04f44b3c # v1.0.0
+    with: { python-version: "3.12" }
+    secrets: inherit
