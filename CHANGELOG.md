@@ -4,6 +4,23 @@ All notable changes to the platform are recorded here. The format follows [Keep 
 
 Tags: `vX.Y.Z` is exact and never moves. `vX` is the moving major tag; it follows the latest `vX.Y.Z` of that major. Consumers should still pin to the commit (see the README).
 
+## [2.0.0] - 2026-10-27
+
+### Changed (breaking)
+
+- `build-test.yml`: the input `python-version` is renamed `python`, so it reads the same in a matrix (`python: ${{ matrix.python }}`) and in the caller's `with:`. Nothing else changes: `test-command`, `working-directory`, `report-secret-names`, the secret `PACKAGE_TOKEN` and the output `cache-hit` are as in 1.0.0.
+
+### Required changes for consumers
+
+In the job that calls the workflow, rename the key under `with:`:
+
+```diff
+-    with: { python-version: "3.12" }
++    with: { python: "3.12" }
+```
+
+and change `@v1` to `@v2` (or the commit SHA of `v2.0.0`). Consumers still on `@v1` or on the commit of `v1.0.0` keep working: the old tag and the old commit are untouched. Move one consumer at a time; each is a one-line pull request.
+
 ## [1.0.0] - 2026-10-27
 
 First release of the shared build-test workflow and the setup-toolchain action.

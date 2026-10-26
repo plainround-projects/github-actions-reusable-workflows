@@ -1,0 +1,70 @@
+name: ci
+
+# The platform tests itself: its tools, the composite action, the consumers' code, and the shared workflow
+# (called on each consumer exactly as a consumer repository would call it).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the internal pin check reads the history of the action folder
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: pip install --require-hashes -r requirements.txt
+      - run: scripts/install-actionlint.sh
+      - run: echo "$PWD/.tools/bin" >> "$GITHUB_PATH"
+      - run: make lint BIN=
+      - run: make audit BIN=
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # tests resolve tags and pinned commits in the history
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: pip install --require-hashes -r requirements.txt
+      - run: make test BIN=
+
+  # The shared workflow, called from this repository on each consumer's folder.
+  consumers:
+    name: ${{ matrix.service }} through build-test
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [svc-orders, svc-billing, svc-search]
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build-test.yml
+    with:
+      python: "3.12"
+      working-directory: consumers/${{ matrix.service }}
+      report-secret-names: true

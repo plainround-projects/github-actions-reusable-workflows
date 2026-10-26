@@ -1,6 +1,6 @@
 [project]
 name = "platform-ci"
-version = "2.0.1"
+version = "2.0.0"
 description = "A shared GitHub Actions platform: a reusable workflow, a composite action, three consumers and the tools that test them."
 readme = "README.md"
 requires-python = ">=3.10"

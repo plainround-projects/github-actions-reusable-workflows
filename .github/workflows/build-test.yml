@@ -1,10 +1,10 @@
 name: build-test
 
-# The shared workflow every service calls. Version 1 API: the input is `python-version`.
+# The shared workflow every service calls. Version 2 API: the Python input is `python` (it was `python-version` in v1).
 on:
   workflow_call:
     inputs:
-      python-version:
+      python:
         description: Python version to test with, such as 3.12.
         type: string
         required: true
@@ -56,7 +56,7 @@ jobs:
       - id: toolchain
         uses: sumitsr/platform-ci/.github/actions/setup-toolchain@d70ac3daf2d7ada75bcbd1bc34d83a6f29ce9abd
         with:
-          python-version: ${{ inputs.python-version }}
+          python-version: ${{ inputs.python }}
           requirements-file: ${{ inputs.working-directory }}/requirements.txt
       # PACKAGE_TOKEN is for a private index the service configures in its own pip.conf; it is empty when not passed.
       - name: Install dependencies
