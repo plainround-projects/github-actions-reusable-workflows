@@ -1,0 +1,51 @@
+name: test-setup-toolchain
+
+# Uses the composite action from this repository the way a consumer would and prints its outputs.
+# The first run prints an empty cache-hit (a miss); the second prints true.
+on:
+  push:
+    branches: [main]
+    paths: [".github/actions/setup-toolchain/**", ".github/workflows/test-setup-toolchain.yml", "requirements.txt"]
+  pull_request:
+    paths: [".github/actions/setup-toolchain/**", ".github/workflows/test-setup-toolchain.yml", "requirements.txt"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  toolchain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - id: toolchain
+        uses: ./.github/actions/setup-toolchain
+        with:
+          python-version: "3.12"
+
+      - name: Print the outputs
+        env:
+          CACHE_HIT: ${{ steps.toolchain.outputs.cache-hit }}
+          PYTHON_VERSION: ${{ steps.toolchain.outputs.python-version }}
+        run: |
+          echo "cache-hit='${CACHE_HIT}'"
+          echo "python-version='${PYTHON_VERSION}'"
+          python --version
+
+      - name: A version the action cannot install is refused
+        id: refused
+        continue-on-error: true
+        uses: ./.github/actions/setup-toolchain
+        with:
+          python-version: latest
+
+      - name: The refusal really failed the step
+        env:
+          OUTCOME: ${{ steps.refused.outcome }}
+        run: test "$OUTCOME" = "failure"
