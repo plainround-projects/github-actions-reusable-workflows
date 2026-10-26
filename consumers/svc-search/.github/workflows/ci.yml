@@ -4,6 +4,6 @@ permissions:
   contents: read
 jobs:
   ci:
-    uses: sumitsr/platform-ci/.github/workflows/build-test.yml@661d5382064eb35ee845d5438810ec6a04f44b3c # v1.0.0
-    with: { python-version: "3.12" }
+    uses: sumitsr/platform-ci/.github/workflows/build-test.yml@fcd73fa6d3117df6168d8f822e79577ac99cedfe # v2.0.0
+    with: { python: "3.12" }
     secrets: inherit
