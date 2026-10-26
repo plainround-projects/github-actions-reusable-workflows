@@ -4,7 +4,7 @@ permissions:
   contents: read
 jobs:
   ci:
-    uses: sumitsr/platform-ci/.github/workflows/build-test.yml@v1
-    with: { python-version: "3.12" }
+    uses: sumitsr/platform-ci/.github/workflows/build-test.yml@v2
+    with: { python: "3.12" }
     secrets:
       PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
