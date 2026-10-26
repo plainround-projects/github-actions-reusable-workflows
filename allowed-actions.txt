@@ -1,0 +1,4 @@
+# External actions the workflows in this repository may use, as owner/repo patterns. Anything else fails
+# `python -m pipeline.pins --allowlist allowed-actions.txt` (make lint, and CI).
+actions/*
+sumitsr/platform-ci

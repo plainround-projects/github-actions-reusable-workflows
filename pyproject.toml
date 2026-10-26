@@ -1,0 +1,49 @@
+[project]
+name = "platform-ci"
+version = "2.0.1"
+description = "A shared GitHub Actions platform: a reusable workflow, a composite action, three consumers and the tools that test them."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Sumit Srivastava" }]
+dependencies = ["PyYAML==6.0.2"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+src = ["pipeline", "tests", "consumers/svc-orders/src", "consumers/svc-billing/src", "consumers/svc-search/src"]
+extend-exclude = ["build"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "N", "C4", "RUF", "PT", "D100", "D101", "D102", "D103", "D104"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+"consumers/*/tests/**" = ["D"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["pipeline", "tests", "consumers"]
+mypy_path = ["consumers/svc-orders/src", "consumers/svc-billing/src", "consumers/svc-search/src"]
+explicit_package_bases = true
+exclude = ["build/"]
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "test_*", "conftest"]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+disallow_untyped_calls = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers"
+markers = ["act: runs a workflow with act and needs Docker (make run)"]
+
+[tool.coverage.run]
+source = ["pipeline"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
