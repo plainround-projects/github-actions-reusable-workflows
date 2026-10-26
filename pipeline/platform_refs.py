@@ -58,17 +58,47 @@ def resolve(repo: Path, ref: str) -> str:
     return result.stdout.strip()
 
 
+def _file_at(repo: Path, commit: str, path: str) -> str | None:
+    result = subprocess.run(
+        ["git", "-C", str(repo), "show", f"{commit}:{path}"], capture_output=True, text=True, check=False
+    )
+    return result.stdout if result.returncode == 0 else None
+
+
+def closure(repo: Path, platform: str, workflow_text: str) -> list[tuple[PlatformRef, str]]:
+    """Return every ``(reference, commit)`` a workflow needs, following the references inside what it references.
+
+    A reusable workflow at a commit can itself use the platform's composite action; running the consumer needs both.
+    Each distinct reference appears once.
+    """
+    found: list[tuple[PlatformRef, str]] = []
+    pending = platform_references(workflow_text, platform)
+    while pending:
+        reference = pending.pop(0)
+        if any(reference == seen for seen, _ in found):
+            continue
+        commit = resolve(repo, reference.ref)
+        found.append((reference, commit))
+        inside = reference.path.removeprefix(f"{platform}/")
+        for candidate in (inside, f"{inside}/action.yml"):
+            text = _file_at(repo, commit, candidate)
+            if text is not None and candidate.endswith(".yml"):
+                pending += platform_references(text, platform)
+                break
+    return found
+
+
 def main(argv: Sequence[str] | None = None) -> int:
-    """Print ``ref<TAB>commit<TAB>kind<TAB>path`` for each platform reference of a workflow file."""
+    """Print ``ref<TAB>commit<TAB>kind<TAB>path`` for each platform reference a workflow file needs."""
     parser = argparse.ArgumentParser(prog="pipeline.platform_refs")
     parser.add_argument("workflow", type=Path)
     parser.add_argument("--platform", required=True, metavar="OWNER/REPO")
     parser.add_argument("--repo", type=Path, default=Path("."), help="the platform repository to resolve refs in")
     args = parser.parse_args(argv)
     try:
-        for reference in platform_references(args.workflow.read_text(encoding="utf-8"), args.platform):
+        for reference, commit in closure(args.repo, args.platform, args.workflow.read_text(encoding="utf-8")):
             kind = "commit" if reference.is_commit else "label"
-            print(f"{reference.ref}\t{resolve(args.repo, reference.ref)}\t{kind}\t{reference.path}")
+            print(f"{reference.ref}\t{commit}\t{kind}\t{reference.path}")
     except LookupError as error:
         print(f"platform_refs: {error}", file=sys.stderr)
         return 1

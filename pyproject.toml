@@ -30,7 +30,7 @@ explicit_package_bases = true
 exclude = ["build/"]
 
 [[tool.mypy.overrides]]
-module = ["tests.*", "test_*", "conftest"]
+module = ["tests.*", "test_orders", "test_billing", "test_search", "conftest"]
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
 disallow_untyped_calls = false

@@ -27,7 +27,7 @@ class Row:
     readable: str
 
 
-def declared_secrets(callee: Mapping[str, Any]) -> set[str]:
+def declared_secrets(callee: Mapping[Any, Any]) -> set[str]:
     """Return the secret names a reusable workflow declares under ``workflow_call.secrets``."""
     triggers = callee.get("on", callee.get(True)) or {}
     return set(((triggers.get("workflow_call") or {}).get("secrets") or {}).keys())
