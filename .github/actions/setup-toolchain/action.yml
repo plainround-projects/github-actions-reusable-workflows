@@ -1,0 +1,50 @@
+name: Set up toolchain
+description: Install a pinned Python and restore the pip cache, keyed on the dependency file.
+
+inputs:
+  python-version:
+    description: Python version to install, such as 3.12 or 3.12.7.
+    required: true
+  requirements-file:
+    description: Dependency file whose hash keys the pip cache.
+    required: false
+    default: requirements.txt
+
+outputs:
+  cache-hit:
+    description: "'true' when the pip cache was restored from the exact key, otherwise empty."
+    value: ${{ steps.cache.outputs.cache-hit }}
+  python-version:
+    description: The exact Python version that was installed.
+    value: ${{ steps.python.outputs.python-version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Validate the inputs
+      shell: bash
+      env:
+        INPUT_PYTHON_VERSION: ${{ inputs.python-version }}
+        INPUT_REQUIREMENTS_FILE: ${{ inputs.requirements-file }}
+      run: bash "$GITHUB_ACTION_PATH/validate-inputs.sh"
+
+    - id: python
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - id: pip-dir
+      shell: bash
+      run: echo "path=$(python -m pip cache dir)" >> "$GITHUB_OUTPUT"
+
+    - id: cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.pip-dir.outputs.path }}
+        key: pip-${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{ hashFiles(inputs.requirements-file) }}
+        restore-keys: |
+          pip-${{ runner.os }}-${{ steps.python.outputs.python-version }}-
+
+    - name: Show the toolchain
+      shell: bash
+      run: python --version
