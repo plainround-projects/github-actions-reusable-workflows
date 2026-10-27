@@ -22,14 +22,34 @@ install: $(STAMP) ## create .venv from the hash-pinned lock file
 up: install ## install the tools and build the act runner image (Docker needed for run)
 	docker build -q -t $(ACT_IMAGE) ci/act-runner
 
+# The platform's own test workflow (the composite action), then one consumer through the shared workflow, with act.
+run: ## run the action's test workflow and svc-orders through build-test locally with act (Docker needed)
+	act push -W .github/workflows/test-setup-toolchain.yml
+	scripts/run_consumer.sh svc-orders
+
+run-all: ## run all three consumers through build-test locally with act
+	scripts/run_consumer.sh svc-orders
+	scripts/run_consumer.sh svc-billing
+	scripts/run_consumer.sh svc-search
+
+demo-moved-tag: $(STAMP) ## lesson step 5: move v1 in a throwaway clone; the @v1 consumer runs the new code, the SHA one does not
+	scripts/demo_moved_tag.sh
+
+secrets-report: $(STAMP) ## what the shared workflow can read, per consumer
+	$(BIN)python -m pipeline.secrets_report
+
 test: $(STAMP) ## unit tests of the pipeline tools, the action, the workflows and the three consumers
 	$(BIN)python -m pytest --cov --cov-report=term-missing --cov-fail-under=95
+	@for service in svc-orders svc-billing svc-search; do \
+	  $(BIN)python -m pytest -q -p no:cacheprovider consumers/$$service || exit 1; \
+	done
 
 lint: $(STAMP) ## ruff, format check, mypy, actionlint, pins (full SHA, fresh, allowed)
 	$(BIN)ruff check .
 	$(BIN)ruff format --check .
 	$(BIN)mypy
 	actionlint
+	shellcheck scripts/*.sh .github/actions/*/*.sh
 	$(BIN)python -m pipeline.pins --internal $(PLATFORM_REPO) --allowlist allowed-actions.txt
 
 format: $(STAMP) ## apply ruff's formatting and safe fixes
