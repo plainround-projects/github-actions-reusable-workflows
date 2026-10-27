@@ -33,4 +33,14 @@ done < <("$python" -m pipeline.platform_refs "$workflow" --platform "$platform" 
 flags+=(--concurrent-jobs 1)
 
 # Run from the repository root so act reads .actrc (the runner image), with the consumer's folder as its workspace.
-exec act push -C "consumers/$service" -W "$workflow" "${flags[@]}" "${@:3}"
+log="$(mktemp)"
+trap 'rm -f "$log"' EXIT
+if act push -C "consumers/$service" -W "$workflow" "${flags[@]}" "${@:3}" 2>&1 | tee "$log"; then
+  exit 0
+fi
+# A busy Docker daemon can time out while act removes the job's volumes, after the job itself succeeded.
+if grep -q "Job succeeded" "$log" && ! grep -q "Job failed" "$log"; then
+  echo "run_consumer: act reported a Docker cleanup error after the job succeeded" >&2
+  exit 0
+fi
+exit 1
