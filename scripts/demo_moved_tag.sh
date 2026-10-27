@@ -26,7 +26,7 @@ step = f'      - run: echo "{sys.argv[1]}"\n'
 path.write_text(text.replace(anchor, step + anchor, 1), encoding="utf-8")
 PY
 git -c user.name=attacker -c user.email=attacker@example.invalid commit -q -am "ci: an extra step"
-git tag -f -a v1 -m "moved" >/dev/null
+git -c user.name=attacker -c user.email=attacker@example.invalid tag -f -a v1 -m "moved" >/dev/null
 echo "v1 was ${original:0:12}, now points to $(git rev-parse --short=12 'v1^{commit}')"
 
 sed "s/ORIGINAL_COMMIT/$original/" "$root/demo/consumer-on-commit.yml" >"$work/on-commit.yml"

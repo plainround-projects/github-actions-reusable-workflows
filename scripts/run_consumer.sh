@@ -14,6 +14,7 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 platform="${PLATFORM_REPO:-sumitsr/platform-ci}"
 service="${1:?usage: scripts/run_consumer.sh SERVICE [WORKFLOW_FILE] [act arguments...]}"
 workflow="${2:-$root/consumers/$service/.github/workflows/ci.yml}"
+workflow="$(cd "$(dirname "$workflow")" && pwd)/$(basename "$workflow")"
 repo="${PLATFORM_GIT:-$root}"
 python="${PYTHON:-$root/.venv/bin/python}"
 checkouts="$root/build/platform"
@@ -29,13 +30,7 @@ while IFS=$'\t' read -r ref commit kind path; do
   echo "resolved ${path#"$platform"/}@${ref:0:12} -> ${commit:0:12} ($kind)"
 done < <("$python" -m pipeline.platform_refs "$workflow" --platform "$platform" --repo "$repo")
 
-# act's cache and artifact servers must be reachable from the runner container, which on Docker Desktop is inside a VM:
-# bind them to the Mac's LAN address.
-flags+=(--concurrent-jobs 1 --artifact-server-port 38568)
-host_ip="$(ipconfig getifaddr en0 2>/dev/null || true)"
-if [[ -n "$host_ip" ]]; then
-  flags+=(--cache-server-addr "$host_ip" --artifact-server-addr "$host_ip")
-fi
+flags+=(--concurrent-jobs 1)
 
-cd "$root/consumers/$service"
-exec act push -W "$workflow" "${flags[@]}" "${@:3}"
+# Run from the repository root so act reads .actrc (the runner image), with the consumer's folder as its workspace.
+exec act push -C "consumers/$service" -W "$workflow" "${flags[@]}" "${@:3}"

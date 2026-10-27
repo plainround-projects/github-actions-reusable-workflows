@@ -6,10 +6,6 @@ DEPS := $(if $(CI),,$(STAMP))
 PYTHON ?= $(shell command -v python3.13 || command -v python3.12 || command -v python3.11 || command -v python3.10)
 ACT_IMAGE := plainround-act-runner:ubuntu-24.04
 -include .env
-# See scripts/run_consumer.sh for why act's servers bind to the LAN address.
-ACT_HOST_IP := $(shell ipconfig getifaddr en0 2>/dev/null)
-ACT_FLAGS := --concurrent-jobs 1 --artifact-server-port 38568 $(if $(ACT_HOST_IP),--cache-server-addr $(ACT_HOST_IP) --artifact-server-addr $(ACT_HOST_IP))
-PLATFORM_REPO ?= sumitsr/platform-ci
 export PYTHONDONTWRITEBYTECODE ?= 1
 
 .PHONY: help install up run run-v1 run-all demo-moved-tag test lint format audit secrets-report check down clean
@@ -29,11 +25,11 @@ up: install ## install the tools and build the act runner image (Docker needed f
 
 # The platform's own test workflow (the composite action), then one consumer through the shared workflow, with act.
 run: ## run the action's test workflow and svc-orders through build-test locally with act (Docker needed)
-	act push $(ACT_FLAGS) -W .github/workflows/test-setup-toolchain.yml
+	act push --concurrent-jobs 1 -W .github/workflows/test-setup-toolchain.yml
 	scripts/run_consumer.sh svc-orders
 
 run-v1: ## run svc-orders as it was before v2: calling build-test@v1 with python-version (still works)
-	scripts/run_consumer.sh svc-orders demo/consumer-on-tag.yml
+	scripts/run_consumer.sh svc-orders $(CURDIR)/demo/consumer-on-tag.yml
 
 run-all: ## run all three consumers through build-test locally with act
 	scripts/run_consumer.sh svc-orders
