@@ -202,6 +202,13 @@ To release: commit the change (action first, then the workflow that pins it), ta
 - **act asks for a GitHub token or tries to clone `github.com/sumitsr/platform-ci`:** use `scripts/run_consumer.sh`, not `act` directly; it supplies the local checkouts.
 - **`make demo-moved-tag` leaves nothing behind:** it works in a temporary clone and deletes it; unpacked commits stay in `build/platform/` (ignored by git) and can be deleted.
 
+## Verification status (2026-10-27)
+
+- Passed on this machine, from a fresh clone: `make check` (lint, ruff, mypy, actionlint, shellcheck, pins (full SHA, fresh, allowed); 68 platform tests and 30 consumer tests passed, coverage 95.67%).
+- Passed with `act` in Docker, on a laptop whose load average was in the dozens (the long pytest durations in the outputs above come from that): `make run` (action test workflow and `svc-orders`), `make run-v1`, `make run-all` (three consumers green) and `make demo-moved-tag` (exit 0: the `@v1` consumer ran the changed code, the SHA-pinned one did not).
+- Pending capacity: the runner image was built from this `ci/act-runner/Dockerfile` (the build client reported a deadline error after the layers were done, but the tagged image was present and was the one used), and `make up` was not re-run from a fresh clone. After Docker Desktop is restarted with free disk (Docker.raw was at its 60 GiB cap on 2026-10-28), run `make up` and then `make run && make run-v1 && make run-all && make demo-moved-tag`.
+- Could not run anywhere here, only on GitHub: the cache hit on the second run, the `consumers` job of `ci.yml`, the Dependabot pull request, `scripts/org-policy.sh` (needs an organization; dry run only).
+
 ## Author and license
 
 Written by Sumit Srivastava. Released under the MIT License, see [LICENSE](LICENSE). Changes are in [CHANGELOG.md](CHANGELOG.md).
