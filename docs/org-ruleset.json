@@ -1,0 +1,24 @@
+{
+  "name": "require-pin-check",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] },
+    "repository_name": { "include": ["~ALL"], "exclude": [] }
+  },
+  "rules": [
+    {
+      "type": "workflows",
+      "parameters": {
+        "do_not_enforce_on_create": false,
+        "workflows": [
+          {
+            "repository_id": 0,
+            "path": ".github/workflows/pin-check.yml",
+            "ref": "refs/heads/main"
+          }
+        ]
+      }
+    }
+  ]
+}

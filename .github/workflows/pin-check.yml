@@ -1,0 +1,37 @@
+name: pin-check
+
+# Fails when any `uses:` in a repository's workflows or actions names a tag or branch instead of a full commit SHA.
+# It has no dependencies, so an organization ruleset (docs/org-ruleset.json) can require it in every repository, and any
+# repository can call it with `uses: sumitsr/platform-ci/.github/workflows/pin-check.yml@<full SHA>`.
+on:
+  pull_request:
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  pin-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Every uses names a full commit SHA, a local path or a digest
+        shell: bash
+        run: |
+          set -uo pipefail
+          files=$(find .github -type f \( -name '*.yml' -o -name '*.yaml' \) 2>/dev/null | sort)
+          [ -n "$files" ] || { echo "no workflow files"; exit 0; }
+          # shellcheck disable=SC2086
+          bad=$(grep -nE '^[[:space:]-]*uses:' $files \
+            | grep -vE 'uses:[[:space:]]*"?(\./|docker://[^[:space:]]+@sha256:[0-9a-f]{64})' \
+            | grep -vE 'uses:[[:space:]]*"?[A-Za-z0-9_.-]+/[A-Za-z0-9_./-]+@[0-9a-f]{40}("|[[:space:]]|$)' || true)
+          if [ -n "$bad" ]; then
+            echo "These references are not pinned to a full commit SHA:"
+            echo "$bad"
+            exit 1
+          fi
+          echo "pin-check: every uses is pinned"
