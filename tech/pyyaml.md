@@ -4,6 +4,30 @@
 
 PyYAML is a Python **library**: code someone else wrote that you install and import. It reads YAML text (see `yaml.md`) and turns it into Python dictionaries, lists, strings and numbers. This repository pins version 6.0.2.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **SHA**: A family of hash functions. A Git **commit SHA** is a 40-character hexadecimal fingerprint that names one exact commit.
+- **commit**: A saved snapshot of a project's files in Git, with a message and an author. Every commit has a unique 40-character name (its SHA).
+- **tag**: A name attached to a commit in Git, usually a version such as `v1.0.0`. Unlike a commit's SHA, a tag can be moved to another commit.
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **secret**: A value such as a password stored in a repository's settings. Workflows can read it, but GitHub hides it in logs.
+- **YAML**: A plain-text format for structured data that uses indentation instead of braces. GitHub workflows are YAML files.
+- **dependency**: A package that your project needs in order to work.
+- **list**: An ordered collection of values written one after another.
+- **boolean**: A value that is either true or false.
+- **UTF-8**: The usual way of storing text as bytes, able to represent every written language.
+- **version**: A number such as `1.2.3` that names one release of software (major.minor.patch).
+- **assert**: A statement that checks something is true and fails loudly if it is not.
+- **runtime**: The program that runs your code (Node.js runs JavaScript).
+- **dictionary**: A Python mapping from keys to values, written `{"key": value}`.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 Three tools read workflow files as data. `pipeline/pins.py` checks that every `uses:` names a full commit SHA, a local path or a digest. `pipeline/platform_refs.py` finds the references a consumer's workflow makes to this platform (and follows them into the reusable workflow and the action). `pipeline/secrets_report.py` reads each consumer's `secrets:` form and the shared workflow's declarations. The tests also assert facts about `build-test.yml`, the action and `pin-check.yml`. Searching text would be fragile, so they parse the YAML.

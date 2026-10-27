@@ -4,6 +4,21 @@
 
 JSON is a text format for data: objects (`{"name": value}`), lists (`[1, 2]`), text in double quotes, numbers, `true`, `false` and `null`. It is how programs exchange data, including GitHub's web API. It has no comments.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **branch**: A movable name for a line of commits in Git. `main` is the usual name of the primary line.
+- **pull request**: A proposal on GitHub to merge the commits of one branch into another. People review it and automation checks it before it is merged.
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **workflow**: A GitHub Actions automation described in a YAML file under `.github/workflows/`. It names the events that start it and the jobs it runs.
+- **API**: Application programming interface: a set of requests a program can send to another program or service, with documented answers. A web API is called over the internet with HTTP.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 The organization-wide pin policy is sent to GitHub's API as a JSON document (a **ruleset**). The branch and settings scripts send small JSON bodies. The `jq` step reads JSON (see `jq.md`).

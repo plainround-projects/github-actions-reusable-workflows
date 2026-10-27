@@ -4,6 +4,23 @@
 
 uv is a fast Python package tool written in Rust. It can do much of what pip and venv do, and it can **resolve** dependencies: given the packages you name, work out which exact versions of everything fit together. In this repository it is used only to **make the lock files**, never in CI and never by the `Makefile`.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **commit**: A saved snapshot of a project's files in Git, with a message and an author. Every commit has a unique 40-character name (its SHA).
+- **CI**: Continuous integration: running checks (build, tests, linters) automatically every time code changes.
+- **package**: In Python, a folder with an `__init__.py` file that can be imported as a unit; also a bundle of code installed with pip.
+- **lock file**: A file that records the exact version, and a checksum, of every package that was installed, so that everyone installs exactly the same thing.
+- **folder**: A container for files and other folders on disk (also called a directory).
+- **version**: A number such as `1.2.3` that names one release of software (major.minor.patch).
+- **pytest**: A Python test framework: it finds functions named `test_...`, runs them, and reports failures.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 The platform's tools and each of the three consumers install from a hash-pinned lock file (`pip install --require-hashes`). A lock that works on every platform and from Python 3.10 up needs a resolver that can write environment markers. `uv pip compile --universal` does.

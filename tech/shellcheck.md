@@ -4,6 +4,22 @@
 
 ShellCheck is a static analyzer for shell scripts. It reads a script without running it and warns about common mistakes: unquoted variables, commands that may not do what they look like, features that your shell does not have. Each warning has a code such as `SC2086`. This repository uses version 0.11.0.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **shell**: The program inside a terminal that reads what you type and starts other programs. Bash is a shell.
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **variable**: A name for a place that holds a value which can be used later in the code.
+- **list**: An ordered collection of values written one after another.
+- **version**: A number such as `1.2.3` that names one release of software (major.minor.patch).
+- **compiler**: A program that translates code written in one language into another form, and checks it on the way.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 Bash is easy to get subtly wrong (see `bash.md`), and these scripts handle untrusted-looking input such as refs and organization names. ShellCheck turns most of the mistakes into build failures.

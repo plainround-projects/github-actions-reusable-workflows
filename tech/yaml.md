@@ -4,6 +4,24 @@
 
 YAML is a text format for structured data: lists, named values, and nests of both. People read and write it easily and programs parse it. It is a **file format**, not a language that runs. Every workflow, action definition and Dependabot setting in this repository is YAML (`.yml`).
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **workflow**: A GitHub Actions automation described in a YAML file under `.github/workflows/`. It names the events that start it and the jobs it runs.
+- **secret**: A value such as a password stored in a repository's settings. Workflows can read it, but GitHub hides it in logs.
+- **CI**: Continuous integration: running checks (build, tests, linters) automatically every time code changes.
+- **list**: An ordered collection of values written one after another.
+- **boolean**: A value that is either true or false.
+- **version**: A number such as `1.2.3` that names one release of software (major.minor.patch).
+- **test**: A small program that uses your code and checks that the answer is the one you expected.
+- **assert**: A statement that checks something is true and fails loudly if it is not.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 GitHub Actions accepts only YAML for workflows and actions, and Dependabot only reads YAML. This repository also has Python code that reads those files as data (the pin checker, the ref resolver, the secrets report) and tests that assert facts about them.

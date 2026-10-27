@@ -4,6 +4,23 @@
 
 pip-audit is a Python tool that checks installed or listed packages against databases of known security problems (**vulnerabilities**) and reports any match. This repository pins pip-audit 2.7.3.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **exit code**: A number a program leaves behind when it ends. 0 means success; any other number means failure. Build systems read it to decide whether a step passed.
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **CI**: Continuous integration: running checks (build, tests, linters) automatically every time code changes.
+- **package**: In Python, a folder with an `__init__.py` file that can be imported as a unit; also a bundle of code installed with pip.
+- **list**: An ordered collection of values written one after another.
+- **version**: A number such as `1.2.3` that names one release of software (major.minor.patch).
+- **pytest**: A Python test framework: it finds functions named `test_...`, runs them, and reports failures.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 The template says dependencies are pinned and checked by the CI's audit step. Pinned versions never change by themselves, so a flaw found later would go unnoticed. While building the repository, `pip-audit` flagged `pytest==8.3.3` (the version the lesson suggested); the locks now use 9.0.3.

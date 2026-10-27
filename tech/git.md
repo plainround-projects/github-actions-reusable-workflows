@@ -4,6 +4,27 @@
 
 Git is a version-control system. It records snapshots of a folder (**commits**) so you can see history, undo mistakes and share work. A **repository** is the folder plus its history in a hidden `.git` folder. A **commit** has a 40-character fingerprint, its **SHA**, computed from its contents, its message and its parent commit. A **tag** is a name attached to a commit. A **branch** is a name that moves forward as you commit. `.gitignore` lists files Git must not track.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **exit code**: A number a program leaves behind when it ends. 0 means success; any other number means failure. Build systems read it to decide whether a step passed.
+- **pipe**: The `|` symbol between two commands: the output of the first becomes the input of the second.
+- **stream**: A flow of data that is written or read piece by piece, such as the text a program prints.
+- **hash**: A fixed-length fingerprint computed from some data. The same data always gives the same hash; any change gives a different one. SHA-256 and SHA-1 are two ways of computing one.
+- **fork**: Your own copy of someone else's repository on GitHub. Strangers propose changes by changing their fork and opening a pull request from it.
+- **workflow**: A GitHub Actions automation described in a YAML file under `.github/workflows/`. It names the events that start it and the jobs it runs.
+- **lock file**: A file that records the exact version, and a checksum, of every package that was installed, so that everyone installs exactly the same thing.
+- **folder**: A container for files and other folders on disk (also called a directory).
+- **test**: A small program that uses your code and checks that the answer is the one you expected.
+- **semantic**: A version scheme where the numbers carry meaning: major for breaking changes, minor for new features, patch for fixes.
+- **virtual environment**: A private folder (here `.venv`) holding a copy of the Python interpreter and the packages installed for one project, so projects do not disturb each other.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 This repository is about *what a name points to*. A GitHub workflow call such as `@v1` is a Git ref, and the lesson's step 5 shows that moving a tag changes what consumers run, while a SHA never changes. So Git is not just storage here: the tools in `pipeline/` and `scripts/` call Git to resolve refs, unpack commits and find the last commit that touched a folder. The history is also the lesson's story, written as real commits.
@@ -82,6 +103,35 @@ fcd73fa feat(workflows)!: rename the build-test input python-version to python (
 ```
 
 The action is committed before the workflow that pins it, because a commit cannot contain its own hash. Commit messages follow the "semantic" style: `feat`, `fix`, `chore`, `docs`, `ci`, with `!` marking a breaking change.
+
+<!-- walk:.gitignore -->
+### `.gitignore`, line by line
+
+Lines 1 to 18:
+
+```text
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.import_linter_cache/
+.coverage
+coverage.xml
+.tools/
+.env
+.DS_Store
+logs/
+.omc/
+```
+
+Each line is a pattern for paths Git should pretend not to see. `.venv/` is the virtual environment (rebuilt from the lock file); `__pycache__/` and `*.pyc` hold Python's compiled bytecode; `*.egg-info/` is packaging metadata; `build/` and `dist/` are generated output (the lab unpacks platform commits into `build/platform`); `.pytest_cache/`, `.mypy_cache/` and `.ruff_cache/` are the tools' caches; `.import_linter_cache/` is a leftover from a tool this repository no longer uses (harmless); `.coverage` and `coverage.xml` are coverage results; `.tools/` is where `scripts/install-actionlint.sh` puts the binary; `.env` holds your own settings; `.DS_Store` is macOS folder metadata; `logs/` holds log files; `.omc/` is local tool state. A trailing `/` matches a folder, `*` matches any characters within a name. Ignoring affects only files not yet tracked.
+
+<!-- /walk:.gitignore -->
 
 ## Try it yourself
 

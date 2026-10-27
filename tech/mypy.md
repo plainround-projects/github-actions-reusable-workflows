@@ -4,6 +4,26 @@
 
 mypy is a **static type checker** for Python. Python lets you write **type hints**, such as `def add(left: int, right: int) -> int`, but the interpreter ignores them. mypy reads them without running the code and reports places where the types do not fit, for example passing text where a number is expected. This repository pins mypy 1.13.0.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **workflow**: A GitHub Actions automation described in a YAML file under `.github/workflows/`. It names the events that start it and the jobs it runs.
+- **CI**: Continuous integration: running checks (build, tests, linters) automatically every time code changes.
+- **package**: In Python, a folder with an `__init__.py` file that can be imported as a unit; also a bundle of code installed with pip.
+- **library**: A package of ready-made code that your program calls.
+- **function**: A named piece of code that takes inputs (parameters), does something, and may return a result.
+- **interface**: A description of the shape something must have: which fields and methods. Code that depends only on the interface can accept any object of that shape.
+- **folder**: A container for files and other folders on disk (also called a directory).
+- **generator**: A Python function that produces values one at a time with `yield` instead of building a whole list.
+- **tuple**: An unchangeable ordered list of values in Python, written `(a, b)`.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 The template asks for typed code checked in CI. Strict checking applies to the platform's tools and to the three consumers' domain, application, infrastructure and interface code. Types document what each function takes and returns.

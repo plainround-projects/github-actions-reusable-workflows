@@ -4,6 +4,29 @@
 
 Docker runs programs in **containers**: isolated processes that see their own file system, their own installed software and their own network view, while sharing the computer's kernel. A container starts from an **image**, a packaged, read-only snapshot of a file system. A **Dockerfile** is the text recipe that builds an image, one instruction per layer. On a Mac, Docker Desktop runs a small Linux virtual machine and all containers live inside it.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **shell**: The program inside a terminal that reads what you type and starts other programs. Bash is a shell.
+- **environment variable**: A named piece of text that is handed to a program by whoever starts it, for example `HOME` or `CI`. Programs read them to learn about the setting they run in.
+- **process**: A program while it is running, with its own memory. Starting a program creates a process; when it ends the process is gone.
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **workflow**: A GitHub Actions automation described in a YAML file under `.github/workflows/`. It names the events that start it and the jobs it runs.
+- **runner**: The computer, usually a virtual machine, on which GitHub runs a job. It starts clean for every job.
+- **HTTP**: The protocol (agreed rules) that web browsers and servers use to talk. A request names a **method** (`GET` to read, `POST` to create, `PATCH` to change part, `PUT` to replace, `DELETE` to remove) and an address; the answer carries a **status code** (200 means success, 404 not found, 500 server problem).
+- **module**: A file, or a folder of files, that other code can load and use. In Terraform, a module is a folder of configuration used like a function.
+- **variable**: A name for a place that holds a value which can be used later in the code.
+- **server**: A program that waits for requests and answers them.
+- **client**: A program that sends requests to a server.
+- **folder**: A container for files and other folders on disk (also called a directory).
+- **compiler**: A program that translates code written in one language into another form, and checks it on the way.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 Docker is not part of the platform's code. It is there so `act` (see `act.md`) can run a consumer's workflow locally: act starts a container per job, and the container must look enough like a GitHub-hosted Ubuntu runner for `actions/setup-python` and the shared workflow to work. The one Dockerfile in this repository builds that container image.

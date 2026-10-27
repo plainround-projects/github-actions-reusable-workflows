@@ -4,6 +4,28 @@
 
 jq is a command-line tool that reads JSON text, picks parts out of it, and prints the result. Think of it as a small language for filtering JSON, the way `grep` filters lines of text. It is preinstalled on GitHub's Ubuntu runners.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **standard output**: The stream where a program writes its normal results (its counterpart, standard error, is for problems).
+- **pipe**: The `|` symbol between two commands: the output of the first becomes the input of the second.
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **workflow**: A GitHub Actions automation described in a YAML file under `.github/workflows/`. It names the events that start it and the jobs it runs.
+- **runner**: The computer, usually a virtual machine, on which GitHub runs a job. It starts clean for every job.
+- **secret**: A value such as a password stored in a repository's settings. Workflows can read it, but GitHub hides it in logs.
+- **JSON**: A plain-text format for structured data: objects `{ "name": "value" }`, lists `[1, 2]`, texts in double quotes, numbers, `true`, `false`, `null`. It has no comments.
+- **image**: A read-only package that holds everything needed to start a container: a file system plus settings. A running **container** is made from an image.
+- **function**: A named piece of code that takes inputs (parameters), does something, and may return a result.
+- **list**: An ordered collection of values written one after another.
+- **string**: A piece of text in a program.
+- **version**: A number such as `1.2.3` that names one release of software (major.minor.patch).
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 The reusable workflow can print which secrets it can read. GitHub gives the workflow a `secrets` object; the step turns it into JSON and uses `jq` to print only the names, never the values.

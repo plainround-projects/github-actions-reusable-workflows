@@ -4,6 +4,29 @@
 
 act is a command-line tool that runs GitHub Actions workflows on your own machine. It reads the workflow YAML, starts a Docker container for each job (see `docker.md`) and runs the steps inside. It is an imitation of GitHub's runner, not an exact copy. This repository uses act 0.2.89.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **SHA**: A family of hash functions. A Git **commit SHA** is a 40-character hexadecimal fingerprint that names one exact commit.
+- **commit**: A saved snapshot of a project's files in Git, with a message and an author. Every commit has a unique 40-character name (its SHA).
+- **tag**: A name attached to a commit in Git, usually a version such as `v1.0.0`. Unlike a commit's SHA, a tag can be moved to another commit.
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **workflow**: A GitHub Actions automation described in a YAML file under `.github/workflows/`. It names the events that start it and the jobs it runs.
+- **runner**: The computer, usually a virtual machine, on which GitHub runs a job. It starts clean for every job.
+- **artifact**: A file or folder that a job saves so that later jobs, or people, can download it.
+- **YAML**: A plain-text format for structured data that uses indentation instead of braces. GitHub workflows are YAML files.
+- **image**: A read-only package that holds everything needed to start a container: a file system plus settings. A running **container** is made from an image.
+- **container**: A running, isolated copy of a program together with its own files, started from an image. Containers are managed by Docker.
+- **Docker**: A tool that builds images and runs containers.
+- **cache**: A saved copy of something slow to produce (such as downloaded packages), kept so the next run can reuse it.
+- **test**: A small program that uses your code and checks that the answer is the one you expected.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 Everything in the lesson normally needs GitHub and several repositories. With act the repository can run a consumer's real `ci.yml`, calling the shared workflow and the composite action, and can show the moved-tag demonstration, with no push.

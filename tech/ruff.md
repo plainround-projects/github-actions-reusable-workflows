@@ -4,6 +4,22 @@
 
 Ruff is a **linter** and a **formatter** for Python, written in Rust. A linter reads source code without running it and reports likely mistakes and style problems. A formatter rewrites code into one agreed layout (line breaks, quotes, spacing). Ruff does both, very fast. This repository pins ruff 0.8.4.
 
+<!-- words -->
+
+<details>
+<summary><b>Words this note uses, in case they are new to you</b> (click to open)</summary>
+
+- **repository**: A project's folder of files together with its complete history of changes. On GitHub, a repository is a page with those files, issues and pull requests.
+- **CI**: Continuous integration: running checks (build, tests, linters) automatically every time code changes.
+- **list**: An ordered collection of values written one after another.
+- **docstring**: A text in triple quotes at the start of a Python file, class or function that documents it; tools and people can read it.
+- **comprehension**: A short way to build a list, set or dictionary from a loop in one expression, such as `[x * 2 for x in items if x > 0]`.
+- **pytest**: A Python test framework: it finds functions named `test_...`, runs them, and reports failures.
+
+</details>
+
+<!-- /words -->
+
 ## Why this repository uses it
 
 The template requires a linter and a formatter configured in the repository and run in CI. One tool does both for the platform's tools and for the three consumers' source and tests. `make lint` and the CI lint job run it.
