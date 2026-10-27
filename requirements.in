@@ -1,6 +1,6 @@
 # Tools for the platform repository itself (the pipeline package and its tests, lint and audit).
 PyYAML==6.0.2
-pytest==8.3.3
+pytest==9.0.3
 pytest-cov==5.0.0
 ruff==0.8.4
 mypy==1.13.0
