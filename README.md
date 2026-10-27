@@ -8,6 +8,7 @@ A small CI platform for GitHub Actions: a reusable workflow that builds and test
 | **Planned hours** | 8 |
 | **Level** | Intermediate |
 | **Architecture** | [ARCHITECTURE.md](ARCHITECTURE.md), decisions in [docs/adr](docs/adr), release notes in [CHANGELOG.md](CHANGELOG.md) |
+| **Technology notes** | [tech/README.md](tech/README.md): one beginner-level note for every technology used here |
 
 **Publish it as `sumitsr/platform-ci`.** The lesson's repository is called `platform-ci`; this folder is its root, and the workflows pin the platform's own commits under that name (`sumitsr/platform-ci/...@<full SHA>`). Push this repository with its history and its tags (`git push origin main --tags`) so the pinned commits exist on GitHub. The three consumers in [`consumers/`](consumers) are complete repositories on their own; to publish them as `svc-orders`, `svc-billing` and `svc-search`, copy each folder into a repository of that name. The history here is the lesson's story as real commits: the action, the workflow at `v1.0.0`, the consumers on `@v1`, the breaking change at `v2.0.0`, the consumers moved one at a time, then pinned.
 
@@ -186,6 +187,7 @@ scripts/             run_consumer.sh, demo_moved_tag.sh, org-policy.sh, install-
 demo/                the two consumer workflows the moved-tag demo uses.
 tests/               the tools, the action, build-test.yml, pin-check.yml.
 docs/                adr/ (three decision records), org-ruleset.json.
+tech/                one beginner-level note per technology used here (start at tech/README.md).
 ci/act-runner/       the Dockerfile of the image act uses as ubuntu-latest.
 CHANGELOG.md         per release, what every consumer must change.
 Makefile             the only commands a reader needs (make help).
