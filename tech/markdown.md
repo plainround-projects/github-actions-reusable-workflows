@@ -80,6 +80,20 @@ flowchart LR
 
 `flowchart LR` is a left-to-right flow chart. `["text"]` is a box; `-->` an arrow; `-. "label" .->` a dotted arrow; `subgraph ... end` groups boxes (the platform repository, the consumers). The names mirror the lesson's diagram.
 
+### The three decision records, in plain words
+
+An **ADR** (architecture decision record) is a short document that records one decision and why it was made. Each has `Status`, `Context`, `Decision`, `Alternatives considered` and `Consequences`.
+
+**`docs/adr/0001-a-reusable-workflow-and-a-composite-action.md`.** *Problem:* every service needs the same build-and-test job and every job needs the same toolchain setup; GitHub has two sharing mechanisms that are not interchangeable. *Decision:* `build-test.yml` is a **reusable workflow**, a whole job (runner, permissions, timeout, secrets, outputs) called at job level with `uses:`; it owns what must be the same everywhere. `setup-toolchain` is a **composite action**, a bundle of steps called inside a job, so a consumer with a different job shape can still reuse the toolchain step. *Rejected:* only a reusable workflow (others would copy the setup steps); only a composite action (each consumer would repeat permissions, runner and checkout, where the security decisions live); a JavaScript action (more maintenance for eight lines of shell). *Consequences:* a reusable workflow cannot be called from inside a step, and it must check out the caller's repository itself; it calls the action by repository path, not `./`, because a `./` path inside a reusable workflow is resolved in the caller's workspace.
+
+**`docs/adr/0002-pin-the-platforms-own-action-to-the-commit-of-its-last-change.md`.** *Problem:* a tag is the obvious ref for the platform's own action and the wrong one, because tags move; and a workflow cannot name its own commit (a commit hash cannot appear inside the commit it hashes). *Decision:* the workflow pins the action to **the last commit that changed the action's folder**: commit the action first, then the workflow that names it; `python -m pipeline.pins --internal sumitsr/platform-ci` fails when the pin is not that commit (README edits ignored); Dependabot is told to leave this dependency alone. *Rejected:* a moving major tag; a second repository; checking out the platform repository inside the workflow. *Consequences:* releasing a change to the action is two commits; the repository must be published as `sumitsr/platform-ci` for the pin to resolve.
+
+**`docs/adr/0003-consumers-pin-by-commit-majors-are-moving-tags-secrets-by-name.md`.** *Problem:* three things decide how safe shared CI is: what a consumer's `uses:` names, how a breaking change ships, and which secrets cross into shared code. *Decision:* releases are exact tags `vX.Y.Z` that never move plus a moving major tag `vX`; a breaking change is a new major (`v2` was released while `v1` stayed, and `CHANGELOG.md` says what each consumer must change); consumers call the workflow by full commit SHA with the version in a comment; secrets cross by name (`secrets: { PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }} }`), and `secrets: inherit` is not allowed by policy (`svc-search` keeps it as an example, and `make secrets-report` prints the difference). *Rejected:* consumers on `@v2` (a moved tag reaches every consumer; `make demo-moved-tag` shows it); branch refs; `secrets: inherit` everywhere. *Consequences:* every release needs one pull request per consumer (the bot opens it); organization-wide enforcement uses the "require actions to be pinned" setting scripted in `scripts/org-policy.sh`.
+
+### The other documents
+
+`CHANGELOG.md` (read by a test, see above), `README.md` (front page, with the repository layout and the verification status), `ARCHITECTURE.md` (the parts and a diagram), each consumer's `README.md`, and `.github/actions/setup-toolchain/README.md` (the action's usage). `docs/org-ruleset.json` is JSON, not Markdown (see `json.md`). `LICENSE` is the MIT license.
+
 ## Try it yourself
 
 1. Open `ARCHITECTURE.md` on GitHub (or in an editor with Mermaid preview) to see the diagram.
