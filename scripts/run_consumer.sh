@@ -29,5 +29,13 @@ while IFS=$'\t' read -r ref commit kind path; do
   echo "resolved ${path#"$platform"/}@${ref:0:12} -> ${commit:0:12} ($kind)"
 done < <("$python" -m pipeline.platform_refs "$workflow" --platform "$platform" --repo "$repo")
 
+# act's cache and artifact servers must be reachable from the runner container, which on Docker Desktop is inside a VM:
+# bind them to the Mac's LAN address.
+flags+=(--concurrent-jobs 1 --artifact-server-port 38568)
+host_ip="$(ipconfig getifaddr en0 2>/dev/null || true)"
+if [[ -n "$host_ip" ]]; then
+  flags+=(--cache-server-addr "$host_ip" --artifact-server-addr "$host_ip")
+fi
+
 cd "$root/consumers/$service"
 exec act push -W "$workflow" "${flags[@]}" "${@:3}"

@@ -1,6 +1,6 @@
-# The image `act` uses as `ubuntu-latest`: Ubuntu 24.04 (so actions/setup-python finds its prebuilt interpreters),
-# Node for JavaScript actions, git, curl, jq, shellcheck and a compiler. It is a stand-in for a GitHub-hosted runner,
-# not a copy of one.
+# The image `act` uses as `ubuntu-latest`: Ubuntu 24.04 (so actions/setup-python finds its prebuilt interpreters), the
+# usual runner tools (git, curl, jq, make, a compiler, shellcheck), Node for JavaScript actions and the SQLite library
+# that Python's sqlite3 module (and so coverage) needs. It is a stand-in for a GitHub-hosted runner, not a copy of one.
 FROM ubuntu:24.04
 
 ARG NODE_VERSION=22.12.0
@@ -18,3 +18,6 @@ RUN arch="$(dpkg --print-architecture)"; \
  && tar -xJ -C /usr/local --strip-components=1 -f /tmp/node.tar.xz \
  && rm /tmp/node.tar.xz \
  && mkdir -p /opt/hostedtoolcache
+
+# libsqlite3 from the official Python image (any architecture): Python from setup-python links against it.
+COPY --from=python:3.12.8-slim-bookworm /usr/lib/*-linux-gnu/libsqlite3.so.0* /usr/lib/
