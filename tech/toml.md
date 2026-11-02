@@ -82,7 +82,7 @@ module = ["tests.*", "test_orders", "test_billing", "test_search", "conftest"]
 disallow_untyped_defs = false
 ```
 
-`mypy_path` lists where to find the packages `orders`, `billing` and `search`. The override relaxes the "every function needs hints" rule for test modules only; the consumers' tests are named `test_orders` and so on, so those names are listed.
+`mypy_path` lists where to find the packages `orders`, `billing` and `search`. The override relaxes the "every function needs hints" rule for test modules only; the consumers' tests are named `test_orders`, `test_billing` and `test_search`, so those names are listed.
 
 ```toml
 [tool.pytest.ini_options]
