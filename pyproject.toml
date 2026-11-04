@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Sumit Srivastava" }]
-dependencies = ["PyYAML==6.0.2"]
+dependencies = ["PyYAML==6.0.3"]
 
 [tool.ruff]
 line-length = 120
