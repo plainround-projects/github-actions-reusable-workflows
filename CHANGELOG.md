@@ -4,6 +4,12 @@ All notable changes to the platform are recorded here. The format follows [Keep 
 
 Tags: `vX.Y.Z` is exact and never moves. `vX` is the moving major tag; it follows the latest `vX.Y.Z` of that major. Consumers should still pin to the commit (see the README).
 
+## [Unreleased]
+
+### Added
+
+- Drawn architecture and flow figures in `docs/diagrams/`, light and dark, shown in the README.
+
 ## [2.0.0] - 2026-10-27
 
 ### Changed (breaking)

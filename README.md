@@ -12,6 +12,24 @@ A small CI platform for GitHub Actions: a reusable workflow that builds and test
 
 **Publish it as `sumitsr/platform-ci`.** The lesson's repository is called `platform-ci`; this folder is its root, and the workflows pin the platform's own commits under that name (`sumitsr/platform-ci/...@<full SHA>`). Push this repository with its history and its tags (`git push origin main --tags`) so the pinned commits exist on GitHub. The three consumers in [`consumers/`](consumers) are complete repositories on their own; to publish them as `svc-orders`, `svc-billing` and `svc-search`, copy each folder into a repository of that name. The history here is the lesson's story as real commits: the action, the workflow at `v1.0.0`, the consumers on `@v1`, the breaking change at `v2.0.0`, the consumers moved one at a time, then pinned.
 
+## Architecture
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture-dark.svg">
+  <img alt="Three consumers, svc-orders, svc-billing and svc-search, call the reusable workflow build-test.yml in platform-ci by full commit SHA; the workflow uses the composite action setup-toolchain pinned to its last change. The movable tags v1 and v2 and the secrets inherit call of svc-search are the amber risks." src="docs/diagrams/architecture.svg">
+</picture>
+
+Notice that every consumer reaches the shared workflow through a commit, while the tag that could move is drawn as a risk, not as the path.
+
+## How one run flows
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/flow-dark.svg">
+  <img alt="One push to svc-billing runs the shared workflow: GitHub resolves the SHA, the workflow checks out, sets up Python through the composite action, installs with hashes and runs the tests. The amber row shows a tag resolving to wherever it points today." src="docs/diagrams/flow.svg">
+</picture>
+
+The run follows one push through the reusable workflow and the composite action to the tests; the amber row is the moved tag that a SHA pin avoids.
+
 ## Prerequisites
 
 | Tool | Version | Used for |

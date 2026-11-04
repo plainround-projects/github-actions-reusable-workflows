@@ -30,6 +30,8 @@ infrastructure, interfaces) whose only CI is a call to the shared workflow.
 
 ## Data flow
 
+Drawn versions of this figure and of the walk-through: [the architecture](docs/diagrams/architecture.svg) and [one run](docs/diagrams/flow.svg).
+
 ```mermaid
 flowchart LR
     subgraph pf["platform-ci repository"]

@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="t d">
+<title id="t">Shared CI, and the risk a moving tag carries</title>
+<desc id="d">Three consumer repositories, svc-orders with no secrets, svc-billing with PACKAGE_TOKEN and svc-search with secrets inherit, call the reusable workflow build-test.yml in the platform-ci repository, pinned to a full commit SHA. The workflow uses the composite action setup-toolchain, pinned to the commit of its last change. The tags v1 and v2 point to the workflow but can be moved, and the secrets inherit call hands over every secret; both are drawn in amber.</desc>
+<style>
+:root{--paper:#ffffff;--ink:#10243d;--mute:#52677f;--accent:#0a6aa8;--good:#19743f;--warn:#8a5a00}
+text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;fill:var(--ink)}
+.title{font-family:Georgia,'Iowan Old Style','Times New Roman',serif;font-size:36px}
+.caption{font-size:16px;fill:var(--mute)}
+.name{font-size:20px;font-weight:600}
+.lane{font-size:17px;font-weight:600}
+.sub{font-size:15px;fill:var(--mute)}
+.label{font-size:15px}
+.tag{font-size:15px;fill:var(--mute)}
+.num{font-size:15px;font-weight:700;fill:var(--paper)}
+.legend{font-size:14px;fill:var(--mute)}
+.t-accent{fill:var(--accent)}
+.t-good{fill:var(--good)}
+.t-warn{fill:var(--warn)}
+.t-ink{fill:var(--ink)}
+.b{font-weight:600}
+.paper{fill:var(--paper);stroke:var(--mute);stroke-opacity:.3}
+.grid{fill:url(#grid)}
+.boundary{fill:var(--mute);fill-opacity:.035;stroke:var(--mute);stroke-opacity:.7;stroke-dasharray:6 5}
+.svc{fill:var(--accent);fill-opacity:.08;stroke:var(--accent);stroke-width:1.25}
+.store{fill:var(--mute);fill-opacity:.1;stroke:var(--mute);stroke-width:1.25}
+.rim{fill:none;stroke:var(--mute);stroke-width:1.25}
+.actor{fill:none;stroke:var(--mute);stroke-width:1.25}
+.slot{fill:var(--accent);fill-opacity:.14;stroke:var(--accent);stroke-width:1}
+.note{fill:var(--warn);fill-opacity:.09;stroke:var(--warn);stroke-width:1}
+.win{fill:var(--good);fill-opacity:.09;stroke:var(--good);stroke-width:1}
+.hair{fill:none;stroke:var(--mute);stroke-opacity:.4;stroke-width:1}
+.zone{fill:var(--accent);fill-opacity:.045;stroke:var(--accent);stroke-width:1.25;stroke-dasharray:6 5}
+.stop{fill:none;stroke:var(--warn);stroke-width:4;stroke-linecap:round}
+.mask{fill:var(--paper)}
+.sync,.async,.read,.fail,.ok{fill:none}
+.sync{stroke:var(--accent);stroke-width:1.75;marker-end:url(#a-sync)}
+.async{stroke:var(--accent);stroke-width:1.75;stroke-dasharray:8 6;marker-end:url(#a-async)}
+.read{stroke:var(--mute);stroke-width:1.75;stroke-linecap:round;stroke-dasharray:1 6;marker-end:url(#a-read)}
+.fail{stroke:var(--warn);stroke-width:2;marker-end:url(#a-fail)}
+.ok{stroke:var(--good);stroke-width:1.75;marker-end:url(#a-ok)}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warn)}
+.dot-g{fill:var(--good)}
+.head-sync,.head-async{stroke:var(--accent)}
+.head-sync{fill:var(--accent)}
+.head-async,.head-read{fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.head-read{stroke:var(--mute)}
+.head-fail{fill:var(--warn)}
+.head-ok{fill:var(--good)}
+.gridline{fill:none;stroke:var(--mute);stroke-opacity:.09}
+</style>
+<defs>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path class="gridline" d="M40 0H0V40"/></pattern>
+<marker id="a-sync" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-sync" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a-async" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-async" d="M1 1L9 5L1 9"/></marker>
+<marker id="a-read" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-read" d="M1 1L9 5L1 9"/></marker>
+<marker id="a-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-fail" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="head-ok" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="paper" x="0.5" y="0.5" width="1199" height="659" rx="16"/>
+<rect class="grid" x="1" y="1" width="1198" height="658" rx="16"/>
+<text class="title" x="48" y="68">Shared CI, and the risk a moving tag carries</text>
+<text class="caption" x="48" y="100">Three consumers call one workflow by commit. Amber: a tag that can move, and secrets: inherit.</text>
+<rect class="boundary" x="48" y="132" width="312" height="448" rx="14"/>
+<text class="tag" x="64" y="160">Consumer repositories</text>
+<rect class="svc" x="72" y="184" width="264" height="92" rx="12"/>
+<text class="name" x="88" y="216">svc-orders</text>
+<text class="sub" x="88" y="240">pinned SHA</text>
+<text class="sub" x="88" y="262">no secrets</text>
+<rect class="svc" x="72" y="316" width="264" height="92" rx="12"/>
+<text class="name" x="88" y="348">svc-billing</text>
+<text class="sub" x="88" y="372">pinned SHA</text>
+<text class="sub" x="88" y="394">PACKAGE_TOKEN</text>
+<rect class="svc" x="72" y="448" width="264" height="92" rx="12"/>
+<text class="name" x="88" y="480">svc-search</text>
+<text class="sub" x="88" y="504">pinned SHA</text>
+<text class="sub" x="88" y="526">secrets: inherit</text>
+<rect class="boundary" x="592" y="132" width="560" height="388" rx="14"/>
+<text class="tag" x="608" y="160">platform-ci repository</text>
+<rect class="svc" x="616" y="184" width="240" height="108" rx="12"/>
+<text class="name" x="632" y="216">Reusable workflow</text>
+<text class="sub" x="632" y="240">build-test.yml</text>
+<text class="sub" x="632" y="262">permissions: {}</text>
+<rect class="svc" x="616" y="368" width="240" height="108" rx="12"/>
+<text class="name" x="632" y="400">Composite action</text>
+<text class="sub" x="632" y="424">setup-toolchain</text>
+<text class="sub" x="632" y="446">validates python input</text>
+<path class="store" d="M952 184a88 12 0 0 1 176 0v84a88 12 0 0 1 -176 0z"/>
+<path class="rim" d="M952 184a88 12 0 0 0 176 0"/>
+<text class="name" x="1040" y="224" text-anchor="middle">Tag v1 / v2</text>
+<text class="sub" x="1040" y="246" text-anchor="middle">movable labels</text>
+<text class="sub" x="1040" y="268" text-anchor="middle">exact tags stay</text>
+<rect class="note" x="912" y="368" width="216" height="124" rx="10"/>
+<text class="label b t-warn" x="928" y="398">make demo-moved-tag</text>
+<text class="sub" x="928" y="424">consumer on @v1 runs</text>
+<text class="sub" x="928" y="446">the moved code; the</text>
+<text class="sub" x="928" y="468">one on a SHA does not</text>
+<path class="sync" d="M360 238H616"/>
+<text class="label t-accent" x="372" y="226">uses @ full SHA</text>
+<path class="fail" d="M336 494H528Q540 494 540 482V274Q540 262 552 262H616"/>
+<text class="label t-warn" x="528" y="402" text-anchor="end">secrets: inherit</text>
+<path class="sync" d="M736 292V368"/>
+<text class="label t-accent" x="748" y="336">pinned to its last change</text>
+<path class="fail" d="M952 238H856"/>
+<text class="label t-warn" x="864" y="226">points to</text>
+<path class="sync" d="M48 616H112"/><text class="legend" x="124" y="621">sync call</text>
+<path class="fail" d="M696 616H760"/><text class="legend" x="772" y="621">failure path</text>
+</svg>
